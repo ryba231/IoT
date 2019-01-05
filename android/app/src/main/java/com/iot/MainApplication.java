@@ -10,11 +10,12 @@ import com.facebook.soloader.SoLoader;
 import com.reactnativenavigation.NavigationApplication;
 import com.reactnativenavigation.react.NavigationReactNativeHost;
 import com.reactnativenavigation.react.ReactGateway;
+import org.pgsqlite.SQLitePluginPackage;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class MainApplication extends NavigationApplication {
+public class MainApplication extends NavigationApplication implements ReactApplication{
     @Override
     public boolean isDebug() {
         // Make sure you are using BuildConfig from your own application
@@ -36,7 +37,8 @@ public class MainApplication extends NavigationApplication {
         // Add additional packages you require here
         // No need to add RnnPackage and MainReactPackage
         return Arrays.<ReactPackage>asList(
-                // eg. new VectorIconsPackage()
+                new MainReactPackage(),
+                new SQLitePluginPackage()   // register SQLite Plugin here
         );
     }
 
