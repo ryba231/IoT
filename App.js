@@ -7,8 +7,10 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {Platform, StyleSheet, Text, View,TouchableOpacity} from 'react-native';
 import SQLite from 'react-native-sqlite-storage';
+import {Navigation} from "react-native-navigation";
+
 
 
 let db = SQLite.openDatabase({name: 'IoT.db', createFromLocation: '1'});
@@ -27,7 +29,7 @@ export default class App extends Component<Props> {
             test: [],
         };
         db.transaction((tx) => {
-            tx.executeSql('SELECT * FROM Test', [], (tx, results) => {
+            tx.executeSql('SELECT * FROM Devices', [], (tx, results) => {
                 console.log("Query completed");
                 var tab = [];
                 var len = results.rows.length;
@@ -46,9 +48,10 @@ export default class App extends Component<Props> {
                 {
                     this.state.test.map((item,k)=>(
                         <View key={k}>
-                            <Text>{item.Id}</Text>
                             <Text>{item.Name}</Text>
-                            <Text>{item.Test}</Text>
+                            <Text>{item.Place}</Text>
+                            <Text>{item.Command}</Text>
+                            <Text>{item.Color}</Text>
                         </View>
                     ))
                 }
