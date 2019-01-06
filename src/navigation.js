@@ -33,3 +33,17 @@ export const goToAuth = () => Navigation.setRoot({
         }
     }
 });
+export const goNewDevice = () => Navigation.setRoot({
+    root: {
+        stack: {
+            id: 'App',
+            children: [
+                {
+                    component: {
+                        name: 'NewDevice',
+                    }
+                }
+            ],
+        }
+    }
+})

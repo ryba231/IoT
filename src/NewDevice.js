@@ -2,44 +2,46 @@ import React from 'react'
 import {
     View,
     Text,
-    StyleSheet,
-    TextInput,
     Button,
-    AsyncStorage
+    TextInput,
+    StyleSheet,
+    Dimensions,
+    TouchableOpacity,
+    ScrollView
 } from 'react-native'
 import {Header} from "react-native-elements";
+import SQLite from "react-native-sqlite-storage";
 
 
-export default class Connection extends React.Component {
+let db = SQLite.openDatabase({name: 'IoT.db', createFromLocation: '1'});
+
+const {width} = Dimensions.get('window');
+
+export default class NewDevices extends React.Component {
     render() {
         return (
             <View>
                 <Header
                     centerComponent={{
-                        text: 'Connection',
+                        text: 'New device',
                         style: {color: '#000000', fontSize: 30, fontFamily: 'IndieFlower'}
                     }}
                     backgroundColor='transparent'/>
-                <Text>Connection</Text>
+
             </View>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    input: {
-        width: 350,
-        fontSize: 18,
-        fontWeight: '500',
-        height: 55,
-        backgroundColor: '#42A5F5',
-        margin: 10,
-        color: 'white',
-        padding: 8,
-        borderRadius: 14
-    },
-    container: {
-        flex: 1,
+
+    devicesButton:{
+        width:width/2-10,
+        height: width/2-10,
+        marginTop: 20,
+        marginHorizontal:5,
+        borderWidth: 0.5,
+        borderColor: '#000000',
         justifyContent: 'center',
         alignItems: 'center'
     }
