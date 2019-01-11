@@ -8,9 +8,37 @@ import {
     AsyncStorage
 } from 'react-native'
 import {Header} from "react-native-elements";
-
+import {Navigation} from "react-native-navigation";
+import {BleManager} from "react-native-ble-plx";
 
 export default class Connection extends React.Component {
+    constructor(props) {
+        super(props);
+        this.manager = new BleManager();
+    }
+    componentWillMount(){
+        this.checkBluetoothState();
+    }
+
+
+    checkBluetoothState(){
+        const subscription = this.manager.onStateChange((state)=>{
+            if (state === 'PoweredOn'){
+                this.scanAndConnect();
+                subscription.remove();
+            }
+        },true);
+    }
+    scanAndConnect(){
+        this.manager.startDeviceScan(null,null,(error,device)=>{
+            if(error){
+                console.log('error',error);
+                return
+            }
+            console.log(device);
+        });
+    }
+
     render() {
         return (
             <View>
