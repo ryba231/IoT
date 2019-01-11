@@ -14,7 +14,7 @@ import {Header} from "react-native-elements";
 import SQLite from "react-native-sqlite-storage";
 import {Navigation} from "react-native-navigation";
 
-import {goNewDevice} from "./navigation";
+import {goNewDevice,goModifiDevice} from "./navigation";
 
 
 let db = SQLite.openDatabase({name: 'IoT.db', createFromLocation: '1'});
@@ -40,27 +40,12 @@ export default class Devices extends React.Component {
             })
         })
     }
-    modifyDevice=(newName,newPlace,newCommand,newColor,name,place)=>{
-        db.transaction((tx)=>{
-            tx.executeSql(`UPDATE Devices SET Name = ?,Place = ?,Command=?,Color=? WHERE Name = ? AND Place = ?`,[newName,newPlace,newCommand,newColor,name,plac],(tx,results)=>{
-                console.log('Modyfikacja OK');
-            })
-        })
-    };
     deleteDevice=(name,place)=>{
         db.transaction((tx)=>{
             tx.executeSql(`DELETE FROM Devices WHERE Name = ? AND Place = ?`,[name,place],(tx,results)=>{
                 console.log('Usuwanie OK');
             })
         })
-    };
-
-    goToScreen=()=>{
-        Navigation.push(this.props.componentId, {
-            component: {
-                name: 'NewDevice',
-            }
-        });
     };
 
     render() {
@@ -76,7 +61,7 @@ export default class Devices extends React.Component {
                     {
                         this.state.test.map((item, k) => (
                             <TouchableOpacity onLongPress={()=>Alert.alert('','',[
-                                    {text: 'Modyfikuj', onPress: () => Alert.alert('Modyfikacja','',)},
+                                    {text: 'Modyfikuj', onPress: () => goModifiDevice()},
                                     {text: 'Usuń', onPress: () => this.deleteDevice(item.Name,item.Place)},
                                     {text: 'Cancel', onPress: () => console.log(''), style: 'cancel'},
                                 ],

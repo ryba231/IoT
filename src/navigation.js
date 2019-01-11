@@ -46,4 +46,18 @@ export const goNewDevice = () => Navigation.setRoot({
             ],
         }
     }
-})
+});
+export const goModifiDevice = () => Navigation.setRoot({
+    root: {
+        stack: {
+            id: 'App',
+            children: [
+                {
+                    component: {
+                        name: 'ModifiDevice',
+                    }
+                }
+            ],
+        }
+    }
+});

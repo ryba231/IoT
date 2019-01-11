@@ -5,4 +5,5 @@ export function registerScreens() {
     Navigation.registerComponent('Devices', () => require('./Devices').default);
     Navigation.registerComponent('Connection', () => require('./Connection').default);
     Navigation.registerComponent('NewDevice', () => require('./NewDevice').default);
+    Navigation.registerComponent('ModifiDevice', () => require('./ModifiDevice').default);
 }
