@@ -150,6 +150,7 @@ configurations.all {
 }
 
 dependencies {
+    compile project(':react-native-ble-plx')
     compile project(':react-native-vector-icons')
     compile project(':react-native-sqlite-storage')
     implementation fileTree(dir: "libs", include: ["*.jar"])

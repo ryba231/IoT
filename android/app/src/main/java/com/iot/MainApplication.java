@@ -3,6 +3,7 @@ package com.iot;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.polidea.reactnativeble.BlePackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -39,6 +40,7 @@ public class MainApplication extends NavigationApplication implements ReactAppli
         // No need to add RnnPackage and MainReactPackage
         return Arrays.<ReactPackage>asList(
                 new MainReactPackage(),
+            new BlePackage(),
             new VectorIconsPackage(),
                 new SQLitePluginPackage()   // register SQLite Plugin here
         );
