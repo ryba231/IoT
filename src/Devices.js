@@ -61,7 +61,7 @@ export default class Devices extends React.Component {
                     {
                         this.state.test.map((item, k) => (
                             <TouchableOpacity onLongPress={()=>Alert.alert('','',[
-                                    {text: 'Modyfikuj', onPress: () => goModifiDevice()},
+                                    {text: 'Modyfikuj', onPress: () => goModifiDevice(item.Name,item.Place)},
                                     {text: 'Usuń', onPress: () => this.deleteDevice(item.Name,item.Place)},
                                     {text: 'Cancel', onPress: () => console.log(''), style: 'cancel'},
                                 ],

@@ -47,7 +47,7 @@ export const goNewDevice = () => Navigation.setRoot({
         }
     }
 });
-export const goModifiDevice = () => Navigation.setRoot({
+export const goModifiDevice = (oldName,oldPlace) => Navigation.setRoot({
     root: {
         stack: {
             id: 'App',
@@ -55,6 +55,10 @@ export const goModifiDevice = () => Navigation.setRoot({
                 {
                     component: {
                         name: 'ModifiDevice',
+                        passProps: {
+                            oldNameDevice:oldName,
+                            oldPlaceDevice:oldPlace
+                        },
                     }
                 }
             ],

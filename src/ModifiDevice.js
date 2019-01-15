@@ -35,12 +35,12 @@ export default class ModifiDevice extends React.Component {
         this.setState({[key]: val})
     };
     modifiDevice = async () => {
-        const {oldDeviceName,oldPlace,newDeviceName,newPlace, newCommand, newColorBox} = this.state;
+        const {newDeviceName,newPlace, newCommand, newColorBox} = this.state;
 
         try {
             db.transaction((tx) => {
                 tx.executeSql(`UPDATE Devices SET Name = ?,Place = ?,Command=?,Color=? WHERE Name = ? AND Place = ?`,
-                    [newDeviceName,newPlace,newCommand,newColorBox,oldDeviceName,oldPlace],(tx,results)=>{
+                    [newDeviceName,newPlace,newCommand,newColorBox,this.props.oldNameDevice,this.props.oldPlaceDevice],(tx,results)=>{
                     console.log('Modyfikacja OK');
                 })
             });
@@ -53,20 +53,6 @@ export default class ModifiDevice extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <TextInput
-                    style={styles.input}
-                    placeholder='Old device name'
-                    autoCapitalize="none"
-                    placeholderTextColor='#8f8f8f'
-                    onChangeText={val => this.onChangeText('oldDeviceName', val)}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder='Old place'
-                    autoCapitalize="none"
-                    placeholderTextColor='#8f8f8f'
-                    onChangeText={val => this.onChangeText('oldPlace', val)}
-                />
                 <TextInput
                     style={styles.input}
                     placeholder='New device name'
