@@ -7,6 +7,7 @@ export const goToAuth = () => Navigation.setRoot({
             children: [
                 {
                     component: {
+                        id:'DEV',
                         name: 'Devices',
                         options: {
                             bottomTab: {
@@ -19,6 +20,7 @@ export const goToAuth = () => Navigation.setRoot({
                 },
                 {
                     component: {
+                        id:'CON',
                         name: 'Connection',
                         options: {
                             bottomTab: {
