@@ -54,7 +54,7 @@ export default class Connection extends React.Component {
                         return device.discoverAllServicesAndCharacteristics();
                     }).then((characteristic) => {
                         this.manager.writeCharacteristicWithoutResponseForDevice(
-                            device.id, 'FFE0', 'FFE1', btoa('green')
+                            // device.id, 'FFE0', 'FFE1', btoa('green')
                         ).then(response => {
                             console.log(response);
                         })
@@ -62,18 +62,19 @@ export default class Connection extends React.Component {
                     }).catch((error) => {
                         console.log('Error', error);
                     });
+                return AsyncStorage.setItem('device', JSON.stringify(devices)).then(() => {
+                    Navigation.mergeOptions('DEV', {
+                        bottomTab: {
+                            badge: '+',
+                        },
+                        bottomTabs: {
+                            currentTabId: 'DEV'
+                        }
+                    });
+                })
 
             }
-            return AsyncStorage.setItem('device', JSON.stringify(devices)).then(() => {
-                Navigation.mergeOptions('DEV', {
-                    bottomTab: {
-                        badge: '+',
-                    },
-                    bottomTabs: {
-                        currentTabId: 'DEV'
-                    }
-                });
-            })
+
         });
 
     }
