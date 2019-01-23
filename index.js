@@ -4,6 +4,11 @@ import {registerScreens} from './src/screens';
 registerScreens();
 
 Navigation.events().registerAppLaunchedListener(() => {
+    Navigation.setDefaultOptions({
+        layout: {
+            orientation: ['portrait']
+        },
+    });
     Navigation.setRoot({
         root: {
             component: {
