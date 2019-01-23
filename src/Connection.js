@@ -62,16 +62,7 @@ export default class Connection extends React.Component {
                     }).catch((error) => {
                         console.log('Error', error);
                     });
-                return AsyncStorage.setItem('device', JSON.stringify(devices)).then(() => {
-                    Navigation.mergeOptions('DEV', {
-                        bottomTab: {
-                            badge: '+',
-                        },
-                        bottomTabs: {
-                            currentTabId: 'DEV'
-                        }
-                    });
-                })
+
 
             }
 
