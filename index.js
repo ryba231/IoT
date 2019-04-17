@@ -1,7 +1,19 @@
-/** @format */
+import {Navigation} from 'react-native-navigation';
+import {registerScreens} from './src/screens';
 
-import {AppRegistry} from 'react-native';
-import App from './App';
-import {name as appName} from './app.json';
+registerScreens();
 
-AppRegistry.registerComponent(appName, () => App);
+Navigation.events().registerAppLaunchedListener(() => {
+    Navigation.setDefaultOptions({
+        layout: {
+            orientation: ['portrait']
+        },
+    });
+    Navigation.setRoot({
+        root: {
+            component: {
+                name: 'Initializing'
+            }
+        },
+    });
+});
