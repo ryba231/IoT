@@ -3,16 +3,18 @@ import {
     View,
     Text,
     StyleSheet,
-    TextInput,
-    Button,
-    AsyncStorage,
-    TouchableOpacity,
+    TouchableOpacity, Alert, Dimensions, AsyncStorage, ScrollView,
 } from 'react-native'
 import {Header} from "react-native-elements";
-import {Navigation} from "react-native-navigation";
 import {BleManager} from "react-native-ble-plx";
+import {goModifiDevice, goNewDevice} from "./navigation";
+import SQLite from "react-native-sqlite-storage";
 
-const devices = {id: 'A8:1B:6A:75:96:65', serviceUUID: 'FFE0', characteristicUUID: 'FFE1'};
+let db = SQLite.openDatabase({name: 'IoT.db', createFromLocation: '1'});
+const {width} = Dimensions.get('window');
+
+
+const devices = {id: '00:15:86:13:DA:54', serviceUUID: 'FFE0', characteristicUUID: 'FFE1'};
 
 export default class Connection extends React.Component {
     constructor(props) {
@@ -20,7 +22,22 @@ export default class Connection extends React.Component {
         this.manager = new BleManager();
         this.state = {
             bleDevice: [],
-        }
+            serviceUUID: 'FFE0',
+            characteristicUUID: 'FFE1',
+            test: [],
+        };
+        db.transaction((tx) => {
+            tx.executeSql('SELECT * FROM Devices', [], (tx, results) => {
+                console.log("Query completed");
+                var tab = [];
+                var len = results.rows.length;
+                for (let i = 0; i < len; i++) {
+                    tab[i] = results.rows.item(i);
+                }
+                this.setState({test: tab});
+
+            })
+        })
     }
 
     /* componentWillMount(){
@@ -37,6 +54,27 @@ export default class Connection extends React.Component {
         }, true);
     }
 
+    changeDevice(command) {
+        if (devices) {
+            this.manager.writeCharacteristicWithoutResponseForDevice(
+                devices.id, devices.serviceUUID, devices.characteristicUUID, btoa(command)
+            ).then(response => {
+                console.log('response', response);
+            }).catch((error) => {
+                console.log('Error', error);
+            });
+
+            this.manager.readCharacteristicForDevice(devices.id, devices.serviceUUID, devices.characteristicUUID)
+                .then(response => {
+                    console.log('response', response);
+                })
+                .catch((error) => {
+                    console.log('Error', error);
+                });
+
+        }
+    }
+
     scanAndConnect() {
         this.manager.startDeviceScan(null, null, (error, device) => {
             if (error) {
@@ -46,7 +84,7 @@ export default class Connection extends React.Component {
             console.log(device);
             this.setState({bleDevice: device})
 
-            if (device.name === 'MLT-BT05') {
+            if (device.name === 'BT05') {
                 this.manager.stopDeviceScan();
 
                 return device.connect()
@@ -54,7 +92,7 @@ export default class Connection extends React.Component {
                         return device.discoverAllServicesAndCharacteristics();
                     }).then((characteristic) => {
                         this.manager.writeCharacteristicWithoutResponseForDevice(
-                            // device.id, 'FFE0', 'FFE1', btoa('green')
+                            // device.id, 'FFE0', 'FFE1', btoa('on')
                         ).then(response => {
                             console.log(response);
                         })
@@ -88,6 +126,20 @@ export default class Connection extends React.Component {
 
                 <TouchableOpacity style={styles.searchButton}
                                   onPress={() => this.checkBluetoothState()}><Text>Szukaj</Text></TouchableOpacity>
+
+                <View style={{flex: 1, flexWrap: 'wrap', flexDirection: 'row'}}>
+
+                    <TouchableOpacity onPress={() => this.changeDevice('on')}
+                                      style={[styles.devicesButton, {backgroundColor: 'green'}]}>
+                        <Text style={{fontSize: 25}}>On</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.devicesButton} onPress={() => this.changeDevice('off')}>
+                        <Text style={{fontSize: 80, color: '#000000'}}>OFF</Text>
+                    </TouchableOpacity>
+
+                </View>
+
             </View>
         )
     }
@@ -120,4 +172,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
+    devicesButton: {
+        width: width / 2 - 10,
+        height: width / 2 - 10,
+        marginTop: 20,
+        marginHorizontal: 5,
+        borderWidth: 0.5,
+        borderColor: '#000000',
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
 })

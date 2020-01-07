@@ -21,8 +21,7 @@ import {goNewDevice, goModifiDevice} from "./navigation";
 let db = SQLite.openDatabase({name: 'IoT.db', createFromLocation: '1'});
 
 const {width} = Dimensions.get('window');
-const device = {id: 'A8:1B:6A:75:96:65', serviceUUID: 'FFE0', characteristicUUID: 'FFE1'};
-
+const devices = {id: '00:15:86:13:DA:54', serviceUUID: 'FFE0', characteristicUUID: 'FFE1'};
 
 export default class Devices extends React.Component {
     constructor() {
@@ -55,6 +54,28 @@ export default class Devices extends React.Component {
         })
     };
 
+    sendCommand(devName, command) {
+        if (this.state.deviceId == null) {
+            this.setState({btState: 'Brak połączenia z urządzeniem...'});
+        } else {
+            this.manager.writeCharacteristicWithResponseForDevice(this.state.deviceId, this.state.serviceUUID, this.state.characteristicUUID, btoa(command)
+            ).then(response => {
+                console.log('## Response: ');
+                console.log(response);
+                if (devName != null) {
+                    this.setState({btState: 'Wysłano komendę do \'' + devName + '\''});
+                } else {
+                    this.setState({btState: 'Wysłano komendę OFF'});
+                }
+            }).catch((err) => {
+                console.log('### devID: ' + this.state.deviceId + ', servUUID: ' + this.state.serviceUUID + ', charUUID: ' + this.state.characteristicUUID);
+                console.log('## Error: ');
+                console.log(err);
+                this.setState({btState: '            Brak połączenia... \nNie można wykonać komendy.'});
+            });
+        }
+    }
+
     changeDevice(command) {
         AsyncStorage.getItem('device').then(devices => {
             devices = JSON.parse(devices);
@@ -80,22 +101,14 @@ export default class Devices extends React.Component {
                     }}
                     backgroundColor='transparent'/>
                 <View style={{flex: 1, flexWrap: 'wrap', flexDirection: 'row'}}>
-                    {
-                        this.state.test.map((item, k) => (
-                                <TouchableOpacity onLongPress={() => Alert.alert('', '', [
-                                        {text: 'Modyfikuj', onPress: () => goModifiDevice(item.Name, item.Place)},
-                                        {text: 'Usuń', onPress: () => this.deleteDevice(item.Name, item.Place)},
-                                        {text: 'Cancel', onPress: () => console.log(''), style: 'cancel'},
-                                    ],
-                                    {cancelable: false})} onPress={() => this.changeDevice(item.command)}
-                                                  key={k} style={[styles.devicesButton, {backgroundColor: item.Color}]}>
-                                    <Text style={{fontSize: 25}}>{item.Name}</Text>
-                                    <Text style={{fontSize: 15}}>{item.Place}</Text>
-                                </TouchableOpacity>
-                        ))
-                    }
-                    <TouchableOpacity style={styles.devicesButton} onPress={() => goNewDevice()}>
-                        <Text style={{fontSize: 80, color: '#000000'}}>+</Text>
+
+                    <TouchableOpacity onPress={() => this.changeDevice('on')}
+                                      style={[styles.devicesButton, {backgroundColor: 'green'}]}>
+                        <Text style={{fontSize: 25}}>On</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.devicesButton} onPress={() => this.changeDevice('off')}>
+                        <Text style={{fontSize: 80, color: '#000000'}}>OFF</Text>
                     </TouchableOpacity>
 
                 </View>
